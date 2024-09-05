@@ -1,16 +1,19 @@
 package com.example.multidatasourcequerycounter.learningmanagementservice
 
+import mu.KotlinLogging
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
+import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
 import org.springframework.web.context.request.ServletRequestAttributes
 
-
 @Aspect
+@Component
 class QueryCounter {
     private val currentQueryLog: ThreadLocal<QueryLog> = ThreadLocal<QueryLog>()
+    private val logger = KotlinLogging.logger {}
 
     @Around("execution( * javax.sql.DataSource.getConnection())")
     fun aroundConnection(joinPoint: ProceedingJoinPoint): Any {
@@ -25,11 +28,12 @@ class QueryCounter {
         val attributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?
 
         if (attributes.isInRequestScope) {
-            val loggingForm = getCurrentQueryLog()
+            val queryLog = getCurrentQueryLog()
             val request = attributes!!.request
-            loggingForm.apiUrl = "${request.method} ${request.requestURI}"
+            queryLog.apiUrl = "${request.method} ${request.requestURI}"
         }
 
+        logger.info { getCurrentQueryLog() }
         currentQueryLog.remove()
     }
 

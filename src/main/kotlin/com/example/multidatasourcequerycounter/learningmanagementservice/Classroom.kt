@@ -22,7 +22,7 @@ class Classroom(
 
     @OneToMany(
         mappedBy = "classroom",
-        fetch = FetchType.EAGER,
+        fetch = FetchType.LAZY,
         cascade = [CascadeType.PERSIST, CascadeType.REMOVE],
         orphanRemoval = true,
     )

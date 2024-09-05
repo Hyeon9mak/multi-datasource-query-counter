@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component
 
 @Component
 class ClassInfoFinder(
-    private val classRoomRepository: ClassRoomRepository,
+    private val classroomRepository: ClassroomRepository,
 ) {
-    fun getClassInfo(classRoomId: Long): ClassInfo {
-        val classRoom = findClassRoomByClassRoomId(classRoomId = classRoomId)
-        return ClassInfo.fromClassRoom(classRoom = classRoom)
+    fun getClassInfo(classroomId: Long): ClassInfo {
+        val classroom = findClassroomByClassroomId(classroomId = classroomId)
+        return ClassInfo.fromClassroom(classroom = classroom)
     }
 
-    private fun findClassRoomByClassRoomId(classRoomId: Long): ClassRoom =
-        classRoomRepository.findByIdOrNull(classRoomId)
-            ?: throw IllegalArgumentException("Class not found with id $classRoomId")
+    private fun findClassroomByClassroomId(classroomId: Long): Classroom =
+        classroomRepository.findByIdOrNull(classroomId)
+            ?: throw IllegalArgumentException("Class not found with id $classroomId")
 }

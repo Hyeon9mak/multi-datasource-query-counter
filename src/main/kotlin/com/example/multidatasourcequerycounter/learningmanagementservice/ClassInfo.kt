@@ -5,9 +5,9 @@ data class ClassInfo(
     val students: List<ClassStudentInfo>,
 ) {
     companion object {
-        fun fromClassRoom(classRoom: ClassRoom): ClassInfo = ClassInfo(
-            className = classRoom.name,
-            students = classRoom.students.map { ClassStudentInfo.fromStudent(it) }
+        fun fromClassroom(classroom: Classroom): ClassInfo = ClassInfo(
+            className = classroom.name,
+            students = classroom.students.map { ClassStudentInfo.fromStudent(it) }
         )
     }
 }

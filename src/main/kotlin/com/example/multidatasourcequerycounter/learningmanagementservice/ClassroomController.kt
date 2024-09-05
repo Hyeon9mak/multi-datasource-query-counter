@@ -5,13 +5,13 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RequestMapping("/class-rooms")
+@RequestMapping("/classrooms")
 @RestController
-class ClassRoomController(
+class ClassroomController(
     private val classInfoFinder: ClassInfoFinder,
 ) {
-    @GetMapping("/{classRoomId}")
-    fun getClassInfo(@PathVariable classRoomId: Long): ClassInfo {
-        return classInfoFinder.getClassInfo(classRoomId = classRoomId)
+    @GetMapping("/{classroomId}")
+    fun getClassInfo(@PathVariable classroomId: Long): ClassInfo {
+        return classInfoFinder.getClassInfo(classroomId = classroomId)
     }
 }

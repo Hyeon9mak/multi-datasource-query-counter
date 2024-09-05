@@ -14,7 +14,7 @@ class Student(
     val name: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    val classRoom: ClassRoom,
+    val classroom: Classroom,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

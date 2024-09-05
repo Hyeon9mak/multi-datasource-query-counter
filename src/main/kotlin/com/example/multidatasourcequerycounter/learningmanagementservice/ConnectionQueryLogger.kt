@@ -3,11 +3,10 @@ package com.example.multidatasourcequerycounter.learningmanagementservice
 import org.aopalliance.intercept.MethodInterceptor
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.aop.framework.ProxyFactory
-import java.sql.Connection
 
 class ConnectionQueryLogger(
     private val queryLog: QueryLog,
-    private val connection: Connection,
+    private val connection: Any,
 ) : MethodInterceptor {
 
     override fun invoke(invocation: MethodInvocation): Any? {

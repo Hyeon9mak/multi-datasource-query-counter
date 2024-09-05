@@ -1,9 +1,9 @@
 package com.example.multidatasourcequerycounter.learningmanagementservice
 
 data class QueryLog(
-    val apiUrl: String,
-    var totalQueryCount: Int,
-    var totalQueryMilliSeconds: Long,
+    var apiUrl: String = "",
+    var totalQueryCount: Int = 0,
+    var totalQueryMilliSeconds: Long = 0L,
 ) {
     fun log(executionMilliSeconds: Long) {
         totalQueryCount++

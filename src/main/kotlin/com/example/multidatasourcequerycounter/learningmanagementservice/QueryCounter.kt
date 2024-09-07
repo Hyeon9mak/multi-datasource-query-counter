@@ -11,14 +11,14 @@ import org.springframework.web.context.request.ServletRequestAttributes
 
 @Aspect
 @Component
-class QueryCounter {
-    private val currentQueryLog: ThreadLocal<QueryLog> = ThreadLocal<QueryLog>()
+class QueryCounter(
+    private val queryLog: QueryLog,
+) {
     private val logger = KotlinLogging.logger {}
 
     @Around("execution( * javax.sql.DataSource.getConnection())")
     fun aroundConnection(joinPoint: ProceedingJoinPoint): Any {
         val connection = joinPoint.proceed()
-        val queryLog = getCurrentQueryLog()
         val connectionQueryLogger = ConnectionQueryLogger(queryLog, connection)
         return connectionQueryLogger.getProxy()
     }
@@ -28,21 +28,11 @@ class QueryCounter {
         val attributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?
 
         if (attributes.isInRequestScope) {
-            val queryLog = getCurrentQueryLog()
             val request = attributes!!.request
             queryLog.apiUrl = "${request.method} ${request.requestURI}"
         }
 
-        logger.info { getCurrentQueryLog() }
-        currentQueryLog.remove()
-    }
-
-    private fun getCurrentQueryLog(): QueryLog {
-        if (currentQueryLog.get() == null) {
-            currentQueryLog.set(QueryLog())
-        }
-
-        return currentQueryLog.get()
+        logger.info { queryLog }
     }
 
     private val ServletRequestAttributes?.isInRequestScope: Boolean

@@ -1,6 +1,5 @@
 package com.example.multidatasourcequerycounter.learningmanagementservice
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties

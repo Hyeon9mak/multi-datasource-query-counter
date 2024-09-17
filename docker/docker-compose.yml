@@ -1,0 +1,16 @@
+version: '3.1'
+services:
+  lms-local-db:
+    image: postgres
+    container_name: lms-local-db
+    restart: always
+    ports:
+      - "15432:5432"
+    environment:
+      POSTGRES_USER: lms
+      POSTGRES_PASSWORD: lms
+    volumes:
+      - lms_local_db_data:/var/lib/postgresql/data
+
+volumes:
+  lms_local_db_data:

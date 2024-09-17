@@ -2,7 +2,9 @@ package com.example.multidatasourcequerycounter.learningmanagementservice
 
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
+@Transactional(readOnly = true)
 @Component
 class ClassInfoFinder(
     private val classroomRepository: ClassroomRepository,

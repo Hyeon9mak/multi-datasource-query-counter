@@ -7,13 +7,13 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 @Component
 class StudentEnroller(
-    private val studentRepository: StudentRepository,
     private val classroomRepository: ClassroomRepository,
 ) {
-    fun enrollStudent(studentName: String, classroomId: Long): Student {
+    fun enrollStudent(studentName: String, classroomId: Long): ClassInfo {
         val classroom = findClassroomByClassroomId(classroomId = classroomId)
         val student = Student(name = studentName, classroom = classroom)
-        return studentRepository.save(student)
+        classroom.enrollStudent(student = student)
+        return ClassInfo.fromClassroom(classroom = classroom)
     }
 
     private fun findClassroomByClassroomId(classroomId: Long): Classroom =

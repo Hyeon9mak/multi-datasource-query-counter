@@ -15,12 +15,12 @@ class ClassroomController(
     private val studentEnroller: StudentEnroller,
 ) {
     @PostMapping
-    fun createClassroom(@RequestBody request: ClassroomCreateRequest): Classroom {
+    fun createClassroom(@RequestBody request: ClassroomCreateRequest): ClassInfo {
         return classroomCreator.createClassroom(name = request.name)
     }
 
     @PostMapping("/{classroomId}/enroll-student")
-    fun enrollStudent(@PathVariable classroomId: Long, @RequestBody request: StudentEnrollRequest): Student {
+    fun enrollStudent(@PathVariable classroomId: Long, @RequestBody request: StudentEnrollRequest): ClassInfo {
         return studentEnroller.enrollStudent(studentName = request.name, classroomId = classroomId)
     }
 

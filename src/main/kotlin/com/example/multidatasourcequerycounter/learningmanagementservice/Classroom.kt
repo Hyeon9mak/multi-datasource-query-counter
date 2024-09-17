@@ -28,6 +28,10 @@ class Classroom(
     )
     val students: MutableList<Student> = mutableListOf()
 
+    fun enrollStudent(student: Student) {
+        students.add(student)
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

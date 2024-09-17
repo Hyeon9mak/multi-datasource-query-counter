@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional
 class ClassroomCreator(
     private val classroomRepository: ClassroomRepository,
 ) {
-    fun createClassroom(name: String): Classroom {
-        val classroom = Classroom(name = name)
-        return classroomRepository.save(classroom)
+    fun createClassroom(name: String): ClassInfo {
+        val classroom = classroomRepository.save(Classroom(name = name))
+        return ClassInfo.fromClassroom(classroom = classroom)
     }
 }

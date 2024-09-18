@@ -16,7 +16,7 @@ class QueryCounter(
 ) {
     private val logger = KotlinLogging.logger {}
 
-    @Around("execution( * javax.sql.DataSource.getConnection())")
+    @Around("execution( * com.zaxxer.hikari.HikariDataSource.getConnection())")
     fun aroundConnection(joinPoint: ProceedingJoinPoint): Any {
         val connection = joinPoint.proceed()
         val connectionQueryLogger = ConnectionQueryLogger(queryLog, connection)

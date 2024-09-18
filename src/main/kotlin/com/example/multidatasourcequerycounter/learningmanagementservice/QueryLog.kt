@@ -1,10 +1,9 @@
 package com.example.multidatasourcequerycounter.learningmanagementservice
 
-import org.springframework.context.annotation.Scope
-import org.springframework.context.annotation.ScopedProxyMode
 import org.springframework.stereotype.Component
+import org.springframework.web.context.annotation.RequestScope
 
-@Scope(scopeName = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@RequestScope
 @Component
 data class QueryLog(
     var apiUrl: String = "",

@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice
+package com.example.multidatasourcequerycounter.learningmanagementservice.querylogger
 
 import mu.KotlinLogging
 import org.aspectj.lang.ProceedingJoinPoint

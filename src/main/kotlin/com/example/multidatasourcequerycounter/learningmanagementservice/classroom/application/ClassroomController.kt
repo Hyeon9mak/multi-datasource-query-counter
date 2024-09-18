@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice
+package com.example.multidatasourcequerycounter.learningmanagementservice.classroom.application
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

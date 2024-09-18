@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice
+package com.example.multidatasourcequerycounter.learningmanagementservice.classroom.application
 
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateProperties
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings

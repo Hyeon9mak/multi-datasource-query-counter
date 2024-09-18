@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice
+package com.example.multidatasourcequerycounter.learningmanagementservice.classroom.application
 
 /**
  * 엔티티 생성시 사용하는 초기 ID 상수.

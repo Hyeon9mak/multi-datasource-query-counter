@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice
+package com.example.multidatasourcequerycounter.learningmanagementservice.querylogger
 
 import org.springframework.stereotype.Component
 import org.springframework.web.context.annotation.RequestScope

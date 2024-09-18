@@ -1,5 +1,6 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice
+package com.example.multidatasourcequerycounter.learningmanagementservice.classroom.domain
 
+import com.example.multidatasourcequerycounter.learningmanagementservice.classroom.application.INITIAL_ID
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

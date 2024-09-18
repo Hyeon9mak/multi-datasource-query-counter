@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice
+package com.example.multidatasourcequerycounter.learningmanagementservice.classroom.domain
 
 import org.springframework.data.jpa.repository.JpaRepository
 

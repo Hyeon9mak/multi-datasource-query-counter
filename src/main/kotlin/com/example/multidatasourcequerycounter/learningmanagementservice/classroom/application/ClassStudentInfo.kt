@@ -1,4 +1,6 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice
+package com.example.multidatasourcequerycounter.learningmanagementservice.classroom.application
+
+import com.example.multidatasourcequerycounter.learningmanagementservice.classroom.domain.Student
 
 data class ClassStudentInfo(
     val studentName: String,

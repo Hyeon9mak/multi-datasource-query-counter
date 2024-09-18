@@ -1,0 +1,22 @@
+### Create classroom
+POST /classrooms HTTP/1.1
+Host: localhost:8084
+Content-Type: application/json
+
+{
+  "name": "Math"
+}
+
+### Enroll student
+POST /classrooms/1/enroll-student HTTP/1.1
+Host: localhost:8084
+Content-Type: application/json
+
+{
+  "name": "John Doe"
+}
+
+### Get classroom
+GET /classrooms/1 HTTP/1.1
+Host: localhost:8084
+Content-Type: application/json

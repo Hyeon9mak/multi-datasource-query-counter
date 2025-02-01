@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter
+package hyeon9mak.multidatasourcequerycounter
 
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.After

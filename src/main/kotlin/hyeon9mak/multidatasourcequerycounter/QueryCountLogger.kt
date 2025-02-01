@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter
+package hyeon9mak.multidatasourcequerycounter
 
 import mu.KotlinLogging
 import org.springframework.stereotype.Component

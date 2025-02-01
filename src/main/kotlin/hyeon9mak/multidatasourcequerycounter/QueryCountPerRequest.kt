@@ -1,4 +1,4 @@
-package com.example.multidatasourcequerycounter
+package hyeon9mak.multidatasourcequerycounter
 
 import org.springframework.stereotype.Component
 import org.springframework.web.context.annotation.RequestScope

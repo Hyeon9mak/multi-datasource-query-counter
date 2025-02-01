@@ -1,12 +1,12 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice.querylogger
+package com.example.multidatasourcequerycounter
 
 import org.aopalliance.intercept.MethodInterceptor
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.web.context.request.RequestContextHolder
 import java.lang.System.*
 
-class PreparedStatementQueryLogger(
-    private val queryLog: QueryLog,
+class PreparedStatementQueryMonitor(
+    private val queryCountPerRequest: QueryCountPerRequest,
 ) : MethodInterceptor {
 
     override fun invoke(invocation: MethodInvocation): Any? {
@@ -15,7 +15,7 @@ class PreparedStatementQueryLogger(
             val result = invocation.proceed()
             val endTime = currentTimeMillis()
 
-            queryLog.log(executionMilliSeconds = endTime - startTime)
+            queryCountPerRequest.incrementQueryCount(executionMilliSeconds = endTime - startTime)
 
             return result
         }

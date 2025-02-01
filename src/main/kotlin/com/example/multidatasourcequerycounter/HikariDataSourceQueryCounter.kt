@@ -1,6 +1,5 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice.querylogger
+package com.example.multidatasourcequerycounter
 
-import mu.KotlinLogging
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Around
@@ -11,16 +10,16 @@ import org.springframework.web.context.request.ServletRequestAttributes
 
 @Aspect
 @Component
-class QueryCounter(
-    private val queryLog: QueryLog,
+class HikariDataSourceQueryCounter(
+    private val queryCountPerRequest: QueryCountPerRequest,
+    private val queryCountLogger: QueryCountLogger,
 ) {
-    private val logger = KotlinLogging.logger {}
 
     @Around("execution( * com.zaxxer.hikari.HikariDataSource.getConnection())")
     fun aroundConnection(joinPoint: ProceedingJoinPoint): Any {
         val connection = joinPoint.proceed()
-        val connectionQueryLogger = ConnectionQueryLogger(queryLog, connection)
-        return connectionQueryLogger.getProxy()
+        val connectionQueryMonitor = ConnectionQueryMonitor(queryCountPerRequest, connection)
+        return connectionQueryMonitor.getProxy()
     }
 
     @After("within(@org.springframework.web.bind.annotation.RestController *)")
@@ -29,10 +28,10 @@ class QueryCounter(
 
         if (attributes.isInRequestScope) {
             val request = attributes!!.request
-            queryLog.apiUrl = "${request.method} ${request.requestURI}"
+            queryCountPerRequest.apiUrl = "${request.method} ${request.requestURI}"
         }
 
-        logger.info { queryLog }
+        queryCountLogger.logQueryCount(queryCountPerRequest)
     }
 
     private val ServletRequestAttributes?.isInRequestScope: Boolean

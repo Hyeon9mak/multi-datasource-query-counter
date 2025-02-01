@@ -1,11 +1,11 @@
-package com.example.multidatasourcequerycounter.learningmanagementservice.querylogger
+package com.example.multidatasourcequerycounter
 
 import org.aopalliance.intercept.MethodInterceptor
 import org.aopalliance.intercept.MethodInvocation
 import org.springframework.aop.framework.ProxyFactory
 
-class ConnectionQueryLogger(
-    private val queryLog: QueryLog,
+class ConnectionQueryMonitor(
+    private val queryCountPerRequest: QueryCountPerRequest,
     private val connection: Any,
 ) : MethodInterceptor {
 
@@ -14,7 +14,7 @@ class ConnectionQueryLogger(
 
         if (result != null && invocation.preparedStatementInvoked()) {
             val proxyFactory = ProxyFactory(result)
-            proxyFactory.addAdvice(PreparedStatementQueryLogger(queryLog = queryLog))
+            proxyFactory.addAdvice(PreparedStatementQueryMonitor(queryCountPerRequest = queryCountPerRequest))
             return proxyFactory.proxy
         }
 

@@ -3,10 +3,11 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.3.3" apply false
     id("io.spring.dependency-management") version "1.1.6"
+    id("maven-publish")
 }
 
 group = "hyeon9mak"
-version = "0.0.2"
+version = "1.0.0"
 
 java {
     toolchain {
@@ -36,5 +37,17 @@ kotlin {
 dependencyManagement {
     imports {
         mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = project.group.toString()
+            artifactId = project.name
+            version = project.version.toString()
+
+            from(components["java"])
+        }
     }
 }

@@ -2,9 +2,7 @@
 
 ## 🖥️ Introduction
 
-This project is a simple tool to measuring query counts in a JDBC API environment.  
-It is based on the Spring Data JPA framework and Spring AOP, CGLib proxy.
-
+This project is a simple tool to measuring query counts in a JDBC API(Spring Data JPA(Hibernate), MyBatis, ...) environment.  
 You can seamlessly measure query counts also in a Multi-DataSource environment.
 
 ```
@@ -89,6 +87,7 @@ Enjoy it! 🎉
 
 ![image](core_concept.png)
 
+It's based on the JDBC API and Spring AOP, CGLib proxy.  
 That's it!
 
 <br>

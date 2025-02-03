@@ -2,8 +2,10 @@
 
 ## 🖥️ Introduction
 
-This project is a simple tool to count the number of queries in a multi-datasource environment.  
-It is based on the Spring Data JPA framework and Spring AOP, Dynamic Proxy.
+This project is a simple tool to measuring query counts in a JDBC API environment.  
+It is based on the Spring Data JPA framework and Spring AOP, CGLib proxy.
+
+You can seamlessly measure query counts also in a Multi-DataSource environment.
 
 ```
 Hibernate: 
@@ -85,7 +87,9 @@ Enjoy it! 🎉
 
 ## 🖥️ Core concepts
 
-(WIP)
+![image](core_concept.png)
+
+That's it!
 
 <br>
 

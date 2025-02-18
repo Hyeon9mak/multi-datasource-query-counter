@@ -1,7 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.3.3" apply false
+    id("org.springframework.boot") version "2.7.18" apply false
     id("io.spring.dependency-management") version "1.1.6"
     id("maven-publish")
 }
@@ -11,7 +11,7 @@ version = "1.0.0"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(8)
     }
 }
 

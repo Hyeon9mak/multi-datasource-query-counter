@@ -1,0 +1,26 @@
+package hyeon9mak.multidatasourcequerycounter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+@Component
+public class QueryCountLogger {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final QueryCounterLoggingLevelProperties properties;
+
+    public QueryCountLogger(QueryCounterLoggingLevelProperties properties) {
+        this.properties = properties;
+    }
+
+    public void logQueryCount(QueryCountPerRequest queryCountPerRequest) {
+        if (properties.getError().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getError().getCount()) {
+            logger.error("{}", queryCountPerRequest);
+        } else if (properties.getWarn().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getWarn().getCount()) {
+            logger.warn("{}", queryCountPerRequest);
+        } else if (properties.getInfo().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getInfo().getCount()) {
+            logger.info("{}", queryCountPerRequest);
+        }
+    }
+}

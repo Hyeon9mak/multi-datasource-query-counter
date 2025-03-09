@@ -24,7 +24,8 @@ public class HikariDataSourceQueryCounter {
     @Around("execution( * com.zaxxer.hikari.HikariDataSource.getConnection())")
     public Object aroundConnection(ProceedingJoinPoint joinPoint) throws Throwable {
         Object connection = joinPoint.proceed();
-        ConnectionQueryMonitor connectionQueryMonitor = new ConnectionQueryMonitor(queryCountPerRequest, connection);
+        QueryCounterRequestContextScopeHolder queryCounterRequestContextScopeHolder = new QueryCounterRequestContextScopeHolder(queryCountPerRequest);
+        ConnectionQueryMonitor connectionQueryMonitor = new ConnectionQueryMonitor(queryCounterRequestContextScopeHolder, connection);
         return connectionQueryMonitor.getProxy();
     }
 

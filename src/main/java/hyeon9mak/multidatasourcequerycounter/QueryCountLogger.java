@@ -16,11 +16,11 @@ public class QueryCountLogger {
 
     public void logQueryCount(QueryCountPerRequest queryCountPerRequest) {
         if (properties.getError().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getError().getCount()) {
-            logger.error("{} totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
+            logger.error("{}, totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
         } else if (properties.getWarn().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getWarn().getCount()) {
-            logger.warn("{} totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
+            logger.warn("{}, totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
         } else if (properties.getInfo().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getInfo().getCount()) {
-            logger.info("{} totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
+            logger.info("{}, totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
         }
     }
 }

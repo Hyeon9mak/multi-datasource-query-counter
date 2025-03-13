@@ -35,11 +35,20 @@ dependencyManagement {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = project.group.toString()
+            groupId = "hyeon9mak"
             artifactId = project.name
-            version = project.version.toString()
+            version = "1.1.0-java-springboot2"
 
             from components.java
+
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
         }
     }
 }

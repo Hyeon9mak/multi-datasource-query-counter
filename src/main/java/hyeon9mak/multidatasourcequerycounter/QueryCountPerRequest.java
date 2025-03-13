@@ -26,7 +26,15 @@ public class QueryCountPerRequest {
         this.apiUrl = apiUrl;
     }
 
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
     public int getTotalQueryCount() {
         return totalQueryCount;
+    }
+
+    public long getTotalQueryMilliSeconds() {
+        return totalQueryMilliSeconds;
     }
 }

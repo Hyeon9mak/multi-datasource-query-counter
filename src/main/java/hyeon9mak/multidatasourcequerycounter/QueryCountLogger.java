@@ -16,11 +16,11 @@ public class QueryCountLogger {
 
     public void logQueryCount(QueryCountPerRequest queryCountPerRequest) {
         if (properties.getError().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getError().getCount()) {
-            logger.error("{}", queryCountPerRequest);
+            logger.error("{} totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
         } else if (properties.getWarn().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getWarn().getCount()) {
-            logger.warn("{}", queryCountPerRequest);
+            logger.warn("{} totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
         } else if (properties.getInfo().isEnable() && queryCountPerRequest.getTotalQueryCount() >= properties.getInfo().getCount()) {
-            logger.info("{}", queryCountPerRequest);
+            logger.info("{} totalQueryCount: {}, totalSpendTime: {}ms", queryCountPerRequest.getApiUrl(), queryCountPerRequest.getTotalQueryCount(), queryCountPerRequest.getTotalQueryMilliSeconds());
         }
     }
 }

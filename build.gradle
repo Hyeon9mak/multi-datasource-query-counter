@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "hyeon9mak"
-version = "1.1.0-java-springboot2"
+version = "1.1.1-java-springboot2"
 
 java {
     toolchain {
@@ -35,9 +35,9 @@ dependencyManagement {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId = "hyeon9mak"
+            groupId = project.group.toString()
             artifactId = project.name
-            version = "1.1.0-java-springboot2"
+            version = project.version.toString()
 
             from components.java
 

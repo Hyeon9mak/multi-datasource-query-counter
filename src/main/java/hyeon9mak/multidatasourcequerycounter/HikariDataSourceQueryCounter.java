@@ -1,13 +1,14 @@
 package hyeon9mak.multidatasourcequerycounter;
 
-import javax.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Aspect
 @Component
@@ -24,21 +25,29 @@ public class HikariDataSourceQueryCounter {
     @Around("execution( * com.zaxxer.hikari.HikariDataSource.getConnection())")
     public Object aroundConnection(ProceedingJoinPoint joinPoint) throws Throwable {
         Object connection = joinPoint.proceed();
-        QueryCounterRequestContextScopeHolder queryCounterRequestContextScopeHolder = new QueryCounterRequestContextScopeHolder(queryCountPerRequest);
-        ConnectionQueryMonitor connectionQueryMonitor = new ConnectionQueryMonitor(queryCounterRequestContextScopeHolder, connection);
+        ConnectionQueryMonitor connectionQueryMonitor = new ConnectionQueryMonitor(queryCountPerRequest, connection);
         return connectionQueryMonitor.getProxy();
     }
 
-    @After("within(@org.springframework.web.bind.annotation.RestController *)")
-    public void afterApiFinished() {
+    @Around("@annotation(countQueries)")
+    public Object aroundCountQueriesMethod(ProceedingJoinPoint joinPoint, CountQueries countQueries) throws Throwable {
+        Object result = joinPoint.proceed();
+
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
         if (isInRequestScope(attributes)) {
             HttpServletRequest request = attributes.getRequest();
-            queryCountPerRequest.updateApiUrl(request.getMethod() + request.getRequestURI());
+            queryCountPerRequest.updateApiUrl(request.getMethod() + " " + request.getRequestURI());
+        } else {
+            MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+            String methodName = methodSignature.getMethod().getName();
+            String className = methodSignature.getDeclaringType().getSimpleName();
+            queryCountPerRequest.updateApiUrl(countQueries.prefix() + className + "." + methodName);
         }
 
         queryCountLogger.logQueryCount(queryCountPerRequest);
+
+        return result;
     }
 
     private boolean isInRequestScope(ServletRequestAttributes attributes) {

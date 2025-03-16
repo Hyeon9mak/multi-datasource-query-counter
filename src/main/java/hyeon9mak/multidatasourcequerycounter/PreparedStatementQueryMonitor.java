@@ -11,10 +11,10 @@ public class PreparedStatementQueryMonitor implements MethodInterceptor {
 
     private static final List<String> QUERY_METHODS = Arrays.asList("execute", "executeQuery", "executeUpdate");
 
-    private final QueryCounterRequestContextScopeHolder queryCounterRequestContextScopeHolder;
+    private final QueryCountPerRequest queryCountPerRequest;
 
-    public PreparedStatementQueryMonitor(QueryCounterRequestContextScopeHolder queryCounterRequestContextScopeHolder) {
-        this.queryCounterRequestContextScopeHolder = queryCounterRequestContextScopeHolder;
+    public PreparedStatementQueryMonitor(QueryCountPerRequest queryCountPerRequest) {
+        this.queryCountPerRequest = queryCountPerRequest;
     }
 
     @Override
@@ -24,7 +24,7 @@ public class PreparedStatementQueryMonitor implements MethodInterceptor {
             Object result = invocation.proceed();
             long endTime = System.currentTimeMillis();
 
-            queryCounterRequestContextScopeHolder.get().incrementQueryCount(endTime - startTime);
+            queryCountPerRequest.incrementQueryCount(endTime - startTime);
 
             return result;
         }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class QueryCountLogger {
 
-    private static final String LOG_MESSAGE_FORMAT = "{} - totalQueryCount: {}, totalSpendTime: {}ms";
+    private static final String LOG_MESSAGE_FORMAT = "'{}' - totalQueryCount: {}, totalSpendTime: {}ms";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final QueryCounterLoggingLevelProperties properties;

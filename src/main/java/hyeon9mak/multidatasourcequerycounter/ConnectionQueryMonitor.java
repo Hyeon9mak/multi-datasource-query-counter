@@ -8,11 +8,11 @@ public class ConnectionQueryMonitor implements MethodInterceptor {
 
     private static final String JDBC_PREPARE_STATEMENT_METHOD_NAME = "prepareStatement";
 
-    private final QueryCounterRequestContextScopeHolder queryCounterRequestContextScopeHolder;
+    private final QueryCountPerRequest queryCountPerRequest;
     private final Object connection;
 
-    public ConnectionQueryMonitor(QueryCounterRequestContextScopeHolder queryCounterRequestContextScopeHolder, Object connection) {
-        this.queryCounterRequestContextScopeHolder = queryCounterRequestContextScopeHolder;
+    public ConnectionQueryMonitor(QueryCountPerRequest queryCountPerRequest, Object connection) {
+        this.queryCountPerRequest = queryCountPerRequest;
         this.connection = connection;
     }
 
@@ -22,7 +22,7 @@ public class ConnectionQueryMonitor implements MethodInterceptor {
 
         if (result != null && wasPreparedStatementInvoked(invocation)) {
             ProxyFactory proxyFactory = new ProxyFactory(result);
-            proxyFactory.addAdvice(new PreparedStatementQueryMonitor(queryCounterRequestContextScopeHolder));
+            proxyFactory.addAdvice(new PreparedStatementQueryMonitor(queryCountPerRequest));
             return proxyFactory.getProxy();
         }
 

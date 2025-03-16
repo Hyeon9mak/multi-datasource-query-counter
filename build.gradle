@@ -2,17 +2,17 @@ import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.18' apply false
+    id 'org.springframework.boot' version '3.2.3' apply false
     id 'io.spring.dependency-management' version '1.1.6'
     id 'maven-publish'
 }
 
 group = "hyeon9mak"
-version = "1.1.4-spring-boot-2"
+version = "1.1.4-spring-boot-3"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 

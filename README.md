@@ -19,7 +19,7 @@ Hibernate:
     from
         example
                  
-WARN  [QueryCountLogger] - QueryCountPerRequest(apiUrl=GET /examples, totalQueryCount=2, totalQueryMilliSeconds=1)
+ERROR --- 'GET /examples' - totalQueryCount: 2, totalSpendTime: 7ms
 ```
 
 <br>
@@ -27,6 +27,16 @@ WARN  [QueryCountLogger] - QueryCountPerRequest(apiUrl=GET /examples, totalQuery
 ## 🖥️ How to use?
 
 ### 1. Add dependency
+
+> **Important Note**   
+> Spring Boot 3.x uses `jakarta.*` packages while Spring Boot 2.x uses `javax.*` packages. Make sure to select the compatible library version for your project.
+
+Choose the appropriate version based on your Spring Boot version:
+
+| Spring Boot Version | Library Version     |
+|---------------------|---------------------|
+| Spring Boot 2.x     | 2.x.x-spring-boot-2 |
+| Spring Boot 3.x     | 2.x.x-spring-boot-3 |
 
 ### In Java Gradle(Groovy DSL)
 
@@ -37,7 +47,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Hyeon9mak:multi-datasource-query-counter:1.0.1'
+    // For Spring Boot 2.x
+    implementation 'com.github.Hyeon9mak:multi-datasource-query-counter:2.0.2-spring-boot-2'
+
+    // For Spring Boot 3.x
+    // implementation 'com.github.Hyeon9mak:multi-datasource-query-counter:2.0.2-spring-boot-3'
 }
 ```
 
@@ -50,7 +64,11 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.Hyeon9mak:multi-datasource-query-counter:1.0.1")
+    // For Spring Boot 2.x
+    implementation("com.github.Hyeon9mak:multi-datasource-query-counter:2.0.2-spring-boot-2")
+
+    // For Spring Boot 3.x
+    // implementation("com.github.Hyeon9mak:multi-datasource-query-counter:2.0.2-spring-boot-3")
 }
 ```
 
@@ -76,7 +94,7 @@ query-counter.logging.level:
 Start the application and check the log.
 
 ```
-ERROR  [QueryCountLogger] - QueryCountPerRequest(apiUrl=GET /examples, totalQueryCount=23, totalQueryMilliSeconds=1)
+ERROR --- 'GET /examples' - totalQueryCount: 2, totalSpendTime: 7ms
 ```
 
 Enjoy it! 🎉
@@ -94,4 +112,5 @@ That's it!
 
 ## 🖥️ Recommended articles
 
-(WIP)
+- https://medium.com/@hyeon9mak/api-%EC%9A%94%EC%B2%AD-%EB%8B%B9-%EC%BF%BC%EB%A6%AC-%EA%B0%9C%EC%88%98%EB%A5%BC-%EC%95%8C%EA%B3%A0-%EC%8B%B6%EC%96%B4-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC%EA%B9%8C%EC%A7%80-%EB%A7%8C%EB%93%A0-%EC%9D%B4%EC%95%BC%EA%B8%B0-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-%EC%A0%9C%EC%9E%91-de39f0d27351
+- https://medium.com/monday-9-pm/hibernate-%EC%9D%98-%EB%B6%88%ED%8E%B8%ED%95%9C-%ED%8E%B8%EC%9D%98-%EA%B8%B0%EB%8A%A5%EB%93%A4-06a1fbc7492a

@@ -1,6 +1,6 @@
 # 🖥️ Sharing QueryCountPerRequest Across Threads in Asynchronous Environments
 
-[한국어](README.md) | **English**
+[한국어](README-java-asynchronous-environments.md) | **English**
 
 ## 🖥️ Overview
 

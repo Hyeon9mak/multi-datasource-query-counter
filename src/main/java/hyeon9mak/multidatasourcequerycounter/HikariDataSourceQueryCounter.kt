@@ -22,7 +22,9 @@ class HikariDataSourceQueryCounter(
     }
 
     @Around("@annotation(countQueries)")
-    fun aroundCountQueriesMethod(joinPoint: ProceedingJoinPoint, countQueries: CountQueries) {
+    fun aroundCountQueriesMethod(joinPoint: ProceedingJoinPoint, countQueries: CountQueries): Any {
+        val result = joinPoint.proceed()
+
         val attributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?
 
         if (attributes.isInRequestScope) {
@@ -36,6 +38,8 @@ class HikariDataSourceQueryCounter(
         }
 
         queryCountLogger.logQueryCount(queryCountPerRequest)
+
+        return result
     }
 
     private val ServletRequestAttributes?.isInRequestScope: Boolean

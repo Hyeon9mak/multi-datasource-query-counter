@@ -11,29 +11,26 @@ class QueryCountLogger(
 
     fun logQueryCount(queryCountPerRequest: QueryCountPerRequest) {
         if (properties.error.enable && queryCountPerRequest.totalQueryCount >= properties.error.count) {
-            logger.error {
-                LOG_MESSAGE_FORMAT.format(
-                    queryCountPerRequest.apiUrl,
-                    queryCountPerRequest.totalQueryCount,
-                    queryCountPerRequest.totalQueryMilliSeconds,
-                )
-            }
+            logger.error(
+                LOG_MESSAGE_FORMAT,
+                queryCountPerRequest.apiUrl,
+                queryCountPerRequest.totalQueryCount,
+                queryCountPerRequest.totalQueryMilliSeconds,
+            )
         } else if (properties.warn.enable && queryCountPerRequest.totalQueryCount >= properties.warn.count) {
-            logger.warn {
-                LOG_MESSAGE_FORMAT.format(
-                    queryCountPerRequest.apiUrl,
-                    queryCountPerRequest.totalQueryCount,
-                    queryCountPerRequest.totalQueryMilliSeconds,
-                )
-            }
+            logger.warn(
+                LOG_MESSAGE_FORMAT,
+                queryCountPerRequest.apiUrl,
+                queryCountPerRequest.totalQueryCount,
+                queryCountPerRequest.totalQueryMilliSeconds,
+            )
         } else if (properties.info.enable && queryCountPerRequest.totalQueryCount >= properties.info.count) {
-            logger.info {
-                LOG_MESSAGE_FORMAT.format(
-                    queryCountPerRequest.apiUrl,
-                    queryCountPerRequest.totalQueryCount,
-                    queryCountPerRequest.totalQueryMilliSeconds,
-                )
-            }
+            logger.info(
+                LOG_MESSAGE_FORMAT,
+                queryCountPerRequest.apiUrl,
+                queryCountPerRequest.totalQueryCount,
+                queryCountPerRequest.totalQueryMilliSeconds,
+            )
         }
     }
 

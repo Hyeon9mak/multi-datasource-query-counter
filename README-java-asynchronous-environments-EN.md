@@ -27,7 +27,7 @@ So, the new thread cannot access the original request context.
 
 Spring provides `TaskDecorator` which allows copying the request context to new threads before executing asynchronous tasks.
 
-### 1-1. Configure ThreadPoolTaskExecutor
+### 1. Configure ThreadPoolTaskExecutor
 
 ```java
 import org.springframework.context.annotation.Bean;
@@ -68,7 +68,7 @@ public class AsyncConfig {
 }
 ```
 
-### 1-2. Using CompletableFuture
+### 2. Using CompletableFuture
 
 When using CompletableFuture directly, use the custom Executor:
 
@@ -84,7 +84,7 @@ public CompletableFuture<List<User>> findAllUsersAsync() {
 }
 ```
 
-### 1-3. Using @Async Annotation
+### 3. Using @Async Annotation
 
 When using the @Async annotation, explicitly specify the configured Executor:
 
@@ -101,17 +101,4 @@ public CompletableFuture<User> findUserByIdAsync(Long id) {
 
 ## 🖥️ WebFlux/Reactor Environment
 
-In a WebFlux environment, you can propagate the context as follows:
-
-```java
-@GetMapping("/users/reactive")
-public Flux<User> getAllUsers() {
-    return Flux.deferContextual(contextView -> {
-        // Get information from the current context
-        // Execute async operations
-        return userRepository.findAllReactive();
-    });
-}
-```
-
-You can also automate context propagation using library like `reactor-core-micrometer`.
+(WIP)

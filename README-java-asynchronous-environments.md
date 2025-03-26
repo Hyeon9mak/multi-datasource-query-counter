@@ -102,17 +102,4 @@ public CompletableFuture<User> findUserByIdAsync(Long id) {
 
 ## 🖥️ WebFlux/Reactor 환경
 
-WebFlux 환경에서는 다음과 같이 컨텍스트를 전파할 수 있습니다:
-
-```java
-@GetMapping("/users/reactive")
-public Flux<User> getAllUsers() {
-    return Flux.deferContextual(contextView -> {
-        // 현재 컨텍스트에서 정보 가져오기
-        // 비동기 작업 실행하기
-        return userRepository.findAllReactive();
-    });
-}
-```
-
-그 외에도 `reactor-core-micrometer` 와 같은 라이브러리를 활용하여 컨텍스트 전파를 자동화 할 수 있습니다.
+(WIP)

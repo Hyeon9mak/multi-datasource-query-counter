@@ -91,7 +91,19 @@ query-counter.logging.level:
     enable: false
 ```
 
-### 3. 로깅 결과 확인
+### 3. 대상 API 지정
+
+`@CountQueries` 어노테이션을 사용하여 측정하고 싶은 API에 지정하세요.
+
+```java
+@CountQueries
+@GetMapping("/examples")
+public List<Example> getExamples() {
+    return repository.getExamples();
+}
+```
+
+### 4. 로깅 결과 확인
 
 애플리케이션을 시작하고 로그를 확인하세요.
 

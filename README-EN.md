@@ -91,7 +91,19 @@ query-counter.logging.level:
     enable: false
 ```
 
-### 3. Check the log
+### 3. Specify the target API
+
+`@CountQueries` annotation is used to specify the API you want to measure.
+
+```java
+@CountQueries
+@GetMapping("/examples")
+public List<Example> getExamples() {
+    return repository.getExamples();
+}
+```
+
+### 4. Check the log
 
 Start the application and check the log.
 

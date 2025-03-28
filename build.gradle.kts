@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "hyeon9mak"
-version = "2.3.0-rc2-spring-boot-3"
+version = "2.3.0-rc3-spring-boot-3"
 
 java {
     toolchain {

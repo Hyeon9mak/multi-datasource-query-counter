@@ -16,7 +16,8 @@ class HikariDataSourceQueryCounter(
     @Around("execution( * com.zaxxer.hikari.HikariDataSource.getConnection())")
     fun aroundConnection(joinPoint: ProceedingJoinPoint): Any {
         val connection = joinPoint.proceed()
-        val connectionQueryMonitor = ConnectionQueryMonitor(QueryCountPerRequestHolder.get(), connection)
+        val queryCountPerRequest = QueryCountPerRequestHolder.get() ?: return connection
+        val connectionQueryMonitor = ConnectionQueryMonitor(queryCountPerRequest, connection)
         return connectionQueryMonitor.getProxy()
     }
 

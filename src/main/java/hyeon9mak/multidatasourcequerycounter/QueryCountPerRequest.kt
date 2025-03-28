@@ -15,7 +15,7 @@ data class QueryCountPerRequest(
         get() = _totalQueryMilliSeconds.get()
 
     fun incrementQueryCount(executionMilliSeconds: Long) {
-        _totalQueryCount = AtomicInteger(_totalQueryCount.incrementAndGet())
-        _totalQueryMilliSeconds = AtomicLong(_totalQueryMilliSeconds.addAndGet(executionMilliSeconds))
+        _totalQueryCount.incrementAndGet()
+        _totalQueryMilliSeconds.addAndGet(executionMilliSeconds)
     }
 }

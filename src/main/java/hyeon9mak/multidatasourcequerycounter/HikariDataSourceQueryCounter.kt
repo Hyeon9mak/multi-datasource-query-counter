@@ -11,20 +11,18 @@ import org.springframework.web.context.request.ServletRequestAttributes
 @Aspect
 @Component
 class HikariDataSourceQueryCounter(
-    private val queryCountPerRequest: QueryCountPerRequest,
     private val queryCountLogger: QueryCountLogger,
 ) {
     @Around("execution( * com.zaxxer.hikari.HikariDataSource.getConnection())")
     fun aroundConnection(joinPoint: ProceedingJoinPoint): Any {
         val connection = joinPoint.proceed()
-        val connectionQueryMonitor = ConnectionQueryMonitor(queryCountPerRequest, connection)
+        val connectionQueryMonitor = ConnectionQueryMonitor(QueryCountPerRequestHolder.get(), connection)
         return connectionQueryMonitor.getProxy()
     }
 
     @Around("@annotation(countQueries)")
     fun aroundCountQueriesMethod(joinPoint: ProceedingJoinPoint, countQueries: CountQueries): Any {
-        val result = joinPoint.proceed()
-
+        val queryCountPerRequest = QueryCountPerRequest()
         val attributes = RequestContextHolder.getRequestAttributes() as ServletRequestAttributes?
 
         if (attributes.isInRequestScope) {
@@ -37,8 +35,10 @@ class HikariDataSourceQueryCounter(
             queryCountPerRequest.apiUrl = countQueries.prefix + className + "." + methodName
         }
 
+        QueryCountPerRequestHolder.set(queryCountPerRequest)
+        val result = joinPoint.proceed()
         queryCountLogger.logQueryCount(queryCountPerRequest)
-
+        QueryCountPerRequestHolder.remove()
         return result
     }
 

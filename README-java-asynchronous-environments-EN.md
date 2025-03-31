@@ -4,7 +4,7 @@
 
 ## 🖥️ Overview
 
-The Multi-Datasource-Query-Counter library counts database queries per API request. By default, it uses `@RequestScope` to ensure each request has its own counter. 
+The Multi-Datasource-Query-Counter library counts database queries per API request. By default, it uses `@RequestScope` to ensure each request has its own counter.
 However, in asynchronous environments (`CompletableFuture`, `@Async`, WebFlux, etc.), execution switches to new threads, which cannot access the original request context, resulting in missed query counts.
 
 This guide explains how to properly share the `QueryCountPerRequest` object across threads in asynchronous environments.
@@ -13,7 +13,7 @@ This guide explains how to properly share the `QueryCountPerRequest` object acro
 
 ## 🖥️ The Problem
 
-In a typical Spring application, a request is processed within a single thread. 
+In a typical Spring application, a request is processed within a single thread.
 However, when using asynchronous code:
 
 1. Execution switches to a new thread.
@@ -48,16 +48,21 @@ public class AsyncConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         
         // Configure thread pool settings according to your application needs... (skip)
-        
-        // Set TaskDecorator to copy the request context to the new thread!
+
         executor.setTaskDecorator(task -> {
-            RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+            // Get the QueryCountPerRequest from the current thread
+            QueryCountPerRequest currentQueryCountPerRequest = QueryCountPerRequestHolder.INSTANCE.get();
+
             return () -> {
                 try {
-                    RequestContextHolder.setRequestAttributes(requestAttributes);
+                    // Propagate the QueryCountPerRequest to the new thread
+                    if (currentQueryCountPerRequest != null) {
+                        QueryCountPerRequestHolder.INSTANCE.set(currentQueryCountPerRequest);
+                    }
                     task.run();
                 } finally {
-                    RequestContextHolder.resetRequestAttributes();
+                    // Clear the QueryCountPerRequest after the task is complete
+                    QueryCountPerRequestHolder.INSTANCE.remove();
                 }
             };
         });

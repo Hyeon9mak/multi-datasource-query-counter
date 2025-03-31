@@ -4,7 +4,7 @@
 
 ## 🖥️ 개요
 
-Multi-Datasource-Query-Counter 라이브러리는 API 요청별로 데이터베이스 쿼리 수를 계산합니다. 
+Multi-Datasource-Query-Counter 라이브러리는 API 요청별로 데이터베이스 쿼리 수를 계산합니다.
 라이브러리는 기본적으로 `@RequestScope`를 활용하여 각 API 요청마다 카운터를 갖도록 하고 있습니다.
 그러나 비동기 환경(`CompletableFuture`, `@Async`, WebFlux 등)에서 별다른 설정 없이 새 스레드로 전환이 진행되면 서로 다른 카운터를 갖게 되므로 올바른 쿼리 개수 측정이 불가능합니다.
 
@@ -49,16 +49,21 @@ public class AsyncConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         
         // 애플리케이션 요구사항에 맞게 스레드 풀 구성... (생략)
-        
-        // 새 스레드에 요청 컨텍스트를 복사하기 위한 TaskDecorator 설정!
+
         executor.setTaskDecorator(task -> {
-            RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+            // 현재 스레드의 QueryCountPerRequest 획득
+            QueryCountPerRequest currentQueryCountPerRequest = QueryCountPerRequestHolder.INSTANCE.get();
+
             return () -> {
                 try {
-                    RequestContextHolder.setRequestAttributes(requestAttributes);
+                    // 새로운 스레드에 QueryCountPerRequest 전파
+                    if (currentQueryCountPerRequest != null) {
+                        QueryCountPerRequestHolder.INSTANCE.set(currentQueryCountPerRequest);
+                    }
                     task.run();
                 } finally {
-                    RequestContextHolder.resetRequestAttributes();
+                    // 스레드 종료 시 QueryCountPerRequest 제거
+                    QueryCountPerRequestHolder.INSTANCE.remove();
                 }
             };
         });

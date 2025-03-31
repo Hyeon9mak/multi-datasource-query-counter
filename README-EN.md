@@ -118,7 +118,7 @@ Enjoy it! 🎉
 ## 🖥️ In asynchronous environments
 
 - [Click here to read the guide for Java Asynchronous environments.](README-java-asynchronous-environments-EN.md)
-- [Click here to read the guide for Kotlin Coroutine environments.](README-kotlin-coroutine-environments-EN.md)
+- [Click here to read the explain for Kotlin Coroutine environments.](README-kotlin-coroutine-environments-EN.md)
 
 <br>
 

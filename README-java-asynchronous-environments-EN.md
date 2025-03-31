@@ -48,16 +48,21 @@ public class AsyncConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         
         // Configure thread pool settings according to your application needs... (skip)
-        
-        // Set TaskDecorator to copy the request context to the new thread!
+
         executor.setTaskDecorator(task -> {
-            RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+            // Get the QueryCountPerRequest from the current thread
+            QueryCountPerRequest currentQueryCountPerRequest = QueryCountPerRequestHolder.INSTANCE.get();
+
             return () -> {
                 try {
-                    RequestContextHolder.setRequestAttributes(requestAttributes);
+                    // Propagate the QueryCountPerRequest to the new thread
+                    if (currentQueryCountPerRequest != null) {
+                        QueryCountPerRequestHolder.INSTANCE.set(currentQueryCountPerRequest);
+                    }
                     task.run();
                 } finally {
-                    RequestContextHolder.resetRequestAttributes();
+                    // Clear the QueryCountPerRequest after the task is complete
+                    QueryCountPerRequestHolder.INSTANCE.remove();
                 }
             };
         });

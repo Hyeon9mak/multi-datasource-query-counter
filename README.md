@@ -118,7 +118,7 @@ ERROR --- 'GET /examples' - totalQueryCount: 2, totalSpendTime: 7ms
 ## 🖥️ 비동기 환경 지원
 
 - [Java 비동기 환경에 대한 가이드를 읽으려면 여기를 클릭하세요.](README-java-asynchronous-environments.md)
-- [Kotlin 코루틴 환경에 대한 가이드를 읽으려면 여기를 클릭하세요.](README-kotlin-coroutine-environments.md)
+- [Kotlin 코루틴 환경에 대한 원리를 확인하고 싶다면 여기를 클릭하세요.](README-kotlin-coroutine-environments.md)
 
 <br>
 

@@ -2,7 +2,6 @@ package hyeon9mak.multidatasourcequerycounter
 
 import org.aopalliance.intercept.MethodInterceptor
 import org.aopalliance.intercept.MethodInvocation
-import org.springframework.web.context.request.RequestContextHolder
 import java.lang.System.*
 
 class PreparedStatementQueryMonitor(
@@ -10,7 +9,7 @@ class PreparedStatementQueryMonitor(
 ) : MethodInterceptor {
 
     override fun invoke(invocation: MethodInvocation): Any? {
-        if (QUERY_METHODS.contains(invocation.method.name) && isRequestScope()) {
+        if (QUERY_METHODS.contains(invocation.method.name)) {
             val startTime = currentTimeMillis()
             val result = invocation.proceed()
             val endTime = currentTimeMillis()
@@ -22,8 +21,6 @@ class PreparedStatementQueryMonitor(
 
         return invocation.proceed()
     }
-
-    private fun isRequestScope(): Boolean = RequestContextHolder.getRequestAttributes() != null
 
     companion object {
         private val QUERY_METHODS = listOf("executeQuery", "execute", "executeUpdate")

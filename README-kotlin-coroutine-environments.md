@@ -1,4 +1,4 @@
-# 🖥️ Kotlin Coroutine 환경 QueryCountPerRequest 사용 가이드
+# 🖥️ Kotlin Coroutine 환경 QueryCountPerRequest 동작 원리 가이드
 
 **한국어** | [English](README-kotlin-coroutine-environments-EN.md)
 
@@ -9,7 +9,7 @@ Multi-Datasource-Query-Counter 라이브러리는 API 요청별 DB 쿼리 수를
 그러나 Kotlin Coroutine 환경에서는 Coroutine 이 스레드를 자유롭게 이동(`suspension`, `resumption`)할 수 있기 때문에,
 `RequestContextHolder`의 컨텍스트가 유지되지 않는 문제가 발생할 수 있습니다.
 
-이 가이드는 Coroutine 환경에서 `QueryCountPerRequest` 를 올바르게 사용하는 방법을 설명합니다.
+이 가이드는 Coroutine 환경에서 `QueryCountPerRequest` 를 올바르게 측정할 수 있는 원리를 설명합니다.
 
 <br>
 
@@ -29,32 +29,58 @@ Coroutine 은 다음과 같은 특성을 갖습니다.
 
 ### 1. CoroutineQueryCountContextElement 활용
 
-`CoroutineQueryCountContextElement` 는 [`ThreadContextElement` 인터페이스](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-thread-context-element/)를 구현하여 분화되는 Coroutine 컨텍스트에 `RequestAttributes` 를 전파합니다.
+`CoroutineQueryCountContextElement` 는 [`ThreadContextElement` 인터페이스](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-thread-context-element/)를 구현하여 전파되는 컨텍스트 요소입니다.
+분화되는 Coroutine 컨텍스트에 `QueryCountPerRequest` 지닌 상태로 전파됩니다.
 
 ```kotlin
 class CoroutineQueryCountContextElement(
-    private val requestAttributes: RequestAttributes = RequestContextHolder.currentRequestAttributes(),
-) : ThreadContextElement<RequestAttributes> {
+    var queryCountPerRequest: QueryCountPerRequest? = null,
+) : ThreadContextElement<QueryCountPerRequest?> {
 
     companion object Key : CoroutineContext.Key<CoroutineQueryCountContextElement>
 
     override val key: CoroutineContext.Key<CoroutineQueryCountContextElement>
         get() = Key
 
-    override fun updateThreadContext(context: CoroutineContext): RequestAttributes {
-        RequestContextHolder.setRequestAttributes(requestAttributes)
-        return requestAttributes
+    override fun updateThreadContext(context: CoroutineContext): QueryCountPerRequest? {
+        return queryCountPerRequest
     }
 
-    override fun restoreThreadContext(context: CoroutineContext, oldState: RequestAttributes) {
-        RequestContextHolder.setRequestAttributes(oldState)
+    override fun restoreThreadContext(context: CoroutineContext, oldState: QueryCountPerRequest?) {
+        queryCountPerRequest = oldState
     }
 }
 ```
 
-실제 구현체는 라이브러리에 포함되어 있으므로, 곧바로 사용할 수 있습니다.
+### 2. CoroutineQueryCountContextElement 로 부터 QueryCountPerRequest 획득
 
-### 2. 사용 예제
+`QueryCountPerRequestHolder` 를 통해 `CoroutineQueryCountContextElement` 를 호출하여 `QueryCountPerRequest` 를 획득합니다. 
+
+```kotlin
+object QueryCountPerRequestHolder {
+
+    private val queryCountPerRequestHolder = ThreadLocal<QueryCountPerRequest?>()
+    private val coroutineContextElement = CoroutineQueryCountContextElement()
+
+    fun set(queryCountPerRequest: QueryCountPerRequest) {
+        queryCountPerRequestHolder.set(queryCountPerRequest)
+        coroutineContextElement.queryCountPerRequest = queryCountPerRequest
+    }
+
+    fun get(): QueryCountPerRequest? = queryCountPerRequestHolder.get()
+        ?: coroutineContextElement.queryCountPerRequest
+
+    fun remove() {
+        queryCountPerRequestHolder.remove()
+        coroutineContextElement.queryCountPerRequest = null
+    }
+}
+
+```
+
+### 3. 사용 예제
+
+자신의 Coroutine 컨텍스트에서 `QueryCountPerRequest` 를 자연스럽게 획득하므로, 별도의 코드 수정이 필요 없습니다.
 
 ```kotlin
 @RestController
@@ -64,10 +90,7 @@ class UserController(
     @CountQueries
     @GetMapping("/users/coroutine")
     fun getUsers() {
-        // 이제 이 Coroutine 과 분화되는 Coroutine 들은 서로 같은 RequestAttributes 를 유지함
-        val element = CoroutineQueryCountContextElement()
-        val threadPool = ForkJoinPool(2)
-        return runBlocking(threadPool.asCoroutineDispatcher() + element) {
+        return runBlocking {
             val usersDeferred = async {
                 userRepository.findAllUsers() // 쿼리 카운트 지점.
             }

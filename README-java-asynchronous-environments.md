@@ -49,16 +49,21 @@ public class AsyncConfig {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         
         // 애플리케이션 요구사항에 맞게 스레드 풀 구성... (생략)
-        
-        // 새 스레드에 요청 컨텍스트를 복사하기 위한 TaskDecorator 설정!
+
         executor.setTaskDecorator(task -> {
-            RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+            // 현재 스레드의 QueryCountPerRequest 획득
+            QueryCountPerRequest currentQueryCountPerRequest = QueryCountPerRequestHolder.INSTANCE.get();
+
             return () -> {
                 try {
-                    RequestContextHolder.setRequestAttributes(requestAttributes);
+                    // 새로운 스레드에 QueryCountPerRequest 전파
+                    if (currentQueryCountPerRequest != null) {
+                        QueryCountPerRequestHolder.INSTANCE.set(currentQueryCountPerRequest);
+                    }
                     task.run();
                 } finally {
-                    RequestContextHolder.resetRequestAttributes();
+                    // 스레드 종료 시 QueryCountPerRequest 제거
+                    QueryCountPerRequestHolder.INSTANCE.remove();
                 }
             };
         });

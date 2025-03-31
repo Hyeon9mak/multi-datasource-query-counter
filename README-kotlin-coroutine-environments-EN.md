@@ -27,34 +27,59 @@ Therefore, it is difficult to properly use `QueryCountPerRequest` by default.
 
 ## 🖥️ Solution: Coroutine Context Element
 
-### 1. Using CoroutineQueryCountContextElement
+### 1. Utilizing CoroutineQueryCountContextElement
 
-`CoroutineQueryCountContextElement` implements the [`ThreadContextElement` interface](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-thread-context-element/) to propagate `RequestAttributes` to the branching Coroutine contexts.
+`CoroutineQueryCountContextElement` implements the [`ThreadContextElement` interface](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-thread-context-element/) as a propagating context element.
+It propagates the `QueryCountPerRequest` state through the branching Coroutine contexts.
 
 ```kotlin
 class CoroutineQueryCountContextElement(
-    private val requestAttributes: RequestAttributes = RequestContextHolder.currentRequestAttributes(),
-) : ThreadContextElement<RequestAttributes> {
+    var queryCountPerRequest: QueryCountPerRequest? = null,
+) : ThreadContextElement<QueryCountPerRequest?> {
 
     companion object Key : CoroutineContext.Key<CoroutineQueryCountContextElement>
 
     override val key: CoroutineContext.Key<CoroutineQueryCountContextElement>
         get() = Key
 
-    override fun updateThreadContext(context: CoroutineContext): RequestAttributes {
-        RequestContextHolder.setRequestAttributes(requestAttributes)
-        return requestAttributes
+    override fun updateThreadContext(context: CoroutineContext): QueryCountPerRequest? {
+        return queryCountPerRequest
     }
 
-    override fun restoreThreadContext(context: CoroutineContext, oldState: RequestAttributes) {
-        RequestContextHolder.setRequestAttributes(oldState)
+    override fun restoreThreadContext(context: CoroutineContext, oldState: QueryCountPerRequest?) {
+        queryCountPerRequest = oldState
     }
 }
 ```
 
-The actual implementation is included in the library, so you can use it immediately.
+### 2. Obtaining QueryCountPerRequest from CoroutineQueryCountContextElement
 
-### 2. Usage Example
+Acquire the `QueryCountPerRequest` by calling `CoroutineQueryCountContextElement` through the `QueryCountPerRequestHolder`.
+
+```kotlin
+object QueryCountPerRequestHolder {
+
+    private val queryCountPerRequestHolder = ThreadLocal<QueryCountPerRequest?>()
+    private val coroutineContextElement = CoroutineQueryCountContextElement()
+
+    fun set(queryCountPerRequest: QueryCountPerRequest) {
+        queryCountPerRequestHolder.set(queryCountPerRequest)
+        coroutineContextElement.queryCountPerRequest = queryCountPerRequest
+    }
+
+    fun get(): QueryCountPerRequest? = queryCountPerRequestHolder.get()
+        ?: coroutineContextElement.queryCountPerRequest
+
+    fun remove() {
+        queryCountPerRequestHolder.remove()
+        coroutineContextElement.queryCountPerRequest = null
+    }
+}
+```
+
+### 3. Usage Example
+
+Since it naturally acquires the `QueryCountPerRequest` in its own Coroutine context, no additional code modification is required.
 
 ```kotlin
 @RestController
@@ -64,10 +89,7 @@ class UserController(
     @CountQueries
     @GetMapping("/users/coroutine")
     fun getUsers() {
-        // Now this Coroutine and its branching Coroutines maintain the same RequestAttributes
-        val element = CoroutineQueryCountContextElement()
-        val threadPool = ForkJoinPool(2)
-        return runBlocking(threadPool.asCoroutineDispatcher() + element) {
+        return runBlocking {
             val usersDeferred = async {
                 userRepository.findAllUsers() // Query count point.
             }

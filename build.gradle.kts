@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "hyeon9mak"
-version = "2.3.2-rc1-spring-boot-2"
+version = "2.3.2-spring-boot-2"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8

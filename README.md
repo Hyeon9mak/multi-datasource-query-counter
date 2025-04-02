@@ -50,10 +50,10 @@ repositories {
 
 dependencies {
     // For Spring Boot 2.x
-    implementation 'com.github.Hyeon9mak:multi-datasource-query-counter:2.0.2-spring-boot-2'
+    implementation 'com.github.Hyeon9mak:multi-datasource-query-counter:2.3.2-spring-boot-2'
 
     // For Spring Boot 3.x
-    // implementation 'com.github.Hyeon9mak:multi-datasource-query-counter:2.0.2-spring-boot-3'
+    // implementation 'com.github.Hyeon9mak:multi-datasource-query-counter:2.3.2-spring-boot-3'
 }
 ```
 
@@ -67,10 +67,10 @@ repositories {
 
 dependencies {
     // For Spring Boot 2.x
-    implementation("com.github.Hyeon9mak:multi-datasource-query-counter:2.0.2-spring-boot-2")
+    implementation("com.github.Hyeon9mak:multi-datasource-query-counter:2.3.2-spring-boot-2")
 
     // For Spring Boot 3.x
-    // implementation("com.github.Hyeon9mak:multi-datasource-query-counter:2.0.2-spring-boot-3")
+    // implementation("com.github.Hyeon9mak:multi-datasource-query-counter:2.3.2-spring-boot-3")
 }
 ```
 
